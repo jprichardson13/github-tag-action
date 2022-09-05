@@ -26,10 +26,13 @@ jobs:
       with:
         fetch-depth: '0'
     - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.36.0
+      uses: jprichardson13/github-tag-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
+        RELEASE_BRANCHES: main
+        TAG_CONTEXT: repo
+        WITH_V: false
+        APPEND_STRING: ALPHA
 ```
 
 _NOTE: set the fetch-depth for `actions/checkout@v2` to be sure you retrieve all commits to look for the semver commit message._
@@ -39,7 +42,7 @@ _NOTE: set the fetch-depth for `actions/checkout@v2` to be sure you retrieve all
 **Environment Variables**
 
 - **GITHUB_TOKEN** **_(required)_** - Required for permission to tag the repo.
-- **DEFAULT_BUMP** _(optional)_ - Which type of bump to use when none explicitly provided (default: `minor`).
+- **DEFAULT_BUMP** _(optional)_ - Which type of bump to use when none explicitly provided (default: `none`).
 - **WITH_V** _(optional)_ - Tag version with `v` character.
 - **RELEASE_BRANCHES** _(optional)_ - Comma separated list of branches (bash reg exp accepted) that will generate the release tags. Other branches and pull-requests generate versions postfixed with the commit hash and do not generate any tag. Examples: `master` or `.*` or `release.*,hotfix.*,master` ...
 - **CUSTOM_TAG** _(optional)_ - Set a custom tag, useful when generating tag based on f.ex FROM image in a docker image. **Setting this tag will invalidate any other settings set!**
@@ -48,6 +51,7 @@ _NOTE: set the fetch-depth for `actions/checkout@v2` to be sure you retrieve all
 - **INITIAL_VERSION** _(optional)_ - Set initial version before bump. Default `0.0.0`.
 - **TAG_CONTEXT** _(optional)_ - Set the context of the previous tag. Possible values are `repo` (default) or `branch`.
 - **PRERELEASE_SUFFIX** _(optional)_ - Suffix for your prerelease versions, `beta` by default. Note this will only be used if a prerelease branch.
+- **APPEND_STRING** _(optional)_ - String which will appended to newly created tag, eg setting to ALPHA will give a tag like 0.1.1-ALPHA
 - **VERBOSE** _(optional)_ - Print git logs. For some projects these logs may be very large. Possible values are `true` (default) and `false`.
 
 #### Outputs
@@ -63,7 +67,7 @@ _NOTE: set the fetch-depth for `actions/checkout@v2` to be sure you retrieve all
 **Manual Bumping:** Any commit message that includes `#major`, `#minor`, `#patch`, or `#none` will trigger the respective version bump. If two or more are present, the highest-ranking one will take precedence.
 If `#none` is contained in the commit message, it will skip bumping regardless `DEFAULT_BUMP`.
 
-**Automatic Bumping:** If no `#major`, `#minor` or `#patch` tag is contained in the commit messages, it will bump whichever `DEFAULT_BUMP` is set to (which is `minor` by default). Disable this by setting `DEFAULT_BUMP` to `none`.
+**Automatic Bumping:** If no `#major`, `#minor` or `#patch` tag is contained in the commit messages, it will bump whichever `DEFAULT_BUMP` is set to (which is `none` by default). Disable this by setting `DEFAULT_BUMP` to `none`.
 
 > **_Note:_** This action **will not** bump the tag if the `HEAD` commit has already been tagged.
 
@@ -82,13 +86,3 @@ If `#none` is contained in the commit message, it will skip bumping regardless `
 ### Credits
 
 [fsaintjacques/semver-tool](https://github.com/fsaintjacques/semver-tool)
-
-### Projects using github-tag-action
-
-A list of projects using github-tag-action for reference.
-
-- another/github-tag-action (uses itself to create tags)
-
-- [anothrNick/json-tree-service](https://github.com/anothrNick/json-tree-service)
-
-  > Access JSON structure with HTTP path parameters as keys/indices to the JSON.
