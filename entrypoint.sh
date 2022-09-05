@@ -29,7 +29,7 @@ echo -e "\tDRY_RUN: ${dryrun}"
 echo -e "\tINITIAL_VERSION: ${initial_version}"
 echo -e "\tTAG_CONTEXT: ${tag_context}"
 echo -e "\tPRERELEASE_SUFFIX: ${suffix}"
-echo -e "\APPEND_STRING: ${append}"
+echo -e "\tAPPEND_STRING: ${append}"
 echo -e "\tVERBOSE: ${verbose}"
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -103,6 +103,10 @@ if [ "$tag_commit" == "$commit" ]; then
     echo ::set-output name=tag::$tag
     exit 0
 fi
+
+# strip end of tag
+tag="$(grep -Po '[0-9]+\.[0-9]+\.[0-9]' $tag)"
+echo "Tag to bump $tag"
 
 # echo log if verbose is wanted
 if $verbose
