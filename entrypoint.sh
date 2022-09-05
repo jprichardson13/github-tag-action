@@ -12,6 +12,7 @@ dryrun=${DRY_RUN:-false}
 initial_version=${INITIAL_VERSION:-0.0.0}
 tag_context=${TAG_CONTEXT:-repo}
 suffix=${PRERELEASE_SUFFIX:-beta}
+append=${APPEND_STRING:-.}
 verbose=${VERBOSE:-true}
 # since https://github.blog/2022-04-12-git-security-vulnerability-announced/ runner uses?
 git config --global --add safe.directory /github/workspace
@@ -28,6 +29,7 @@ echo -e "\tDRY_RUN: ${dryrun}"
 echo -e "\tINITIAL_VERSION: ${initial_version}"
 echo -e "\tTAG_CONTEXT: ${tag_context}"
 echo -e "\tPRERELEASE_SUFFIX: ${suffix}"
+echo -e "\APPEND_STRING: ${append}"
 echo -e "\tVERBOSE: ${verbose}"
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -139,6 +141,12 @@ echo $part
 if $with_v
 then
 	new="v$new"
+fi
+
+# add suffix
+if [ $append -ne "." ]
+then
+	new="$new-$append"
 fi
 
 if [ ! -z $custom_tag ]
