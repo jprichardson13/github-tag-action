@@ -105,7 +105,7 @@ if [ "$tag_commit" == "$commit" ]; then
 fi
 
 # strip end of tag
-tag="$(grep -Po '[0-9]+\.[0-9]+\.[0-9]' $tag)"
+tag="$(grep -E '^[0-9]+\.[0-9]+\.[0-9]' $tag)"
 echo "Tag to bump $tag"
 
 # echo log if verbose is wanted
