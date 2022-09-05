@@ -144,7 +144,7 @@ then
 fi
 
 # add suffix
-if [ $append -ne "." ]
+if [ $append != "." ]
 then
 	new="$new-$append"
 fi
